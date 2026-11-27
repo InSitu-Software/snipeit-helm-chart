@@ -88,12 +88,20 @@ spec:
             httpGet:
               path: /health
               port: 80
+              # Snipe-IT v8 rejects requests whose Host is not APP_URL's host (400), and kubelet sends the pod IP.
+              httpHeaders:
+                - name: Host
+                  value: {{ .Values.config.snipeit.url | urlParse | pluck "host" | first | quote }}
             periodSeconds: 15
             timeoutSeconds: 3
           readinessProbe:
             httpGet:
               path: /health
               port: 80
+              # Snipe-IT v8 rejects requests whose Host is not APP_URL's host (400), and kubelet sends the pod IP.
+              httpHeaders:
+                - name: Host
+                  value: {{ .Values.config.snipeit.url | urlParse | pluck "host" | first | quote }}
             periodSeconds: 15
             timeoutSeconds: 3
         {{- with .Values.resources }}
